@@ -11,7 +11,6 @@
 
         public Motto(string identifier, int year, string model, string licensePlate)
         {
-            Identifier = identifier;
             Year = year;
             Model = model;
             LicensePlate = licensePlate;

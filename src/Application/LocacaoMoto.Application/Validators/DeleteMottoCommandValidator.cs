@@ -10,7 +10,7 @@ namespace LocacaoMoto.Application.Validators
         public DeleteMottoCommandValidator(INotifier notifier, IRentalRepository rentalRepository) : base(notifier)
         {
             RuleFor(d => d.Identifier).NotEmpty().NotNull();
-            RuleFor(d => d).Must(c => rentalRepository.HasRentalMotto(new Queries.GetRentalByMottoIdentifierQuery() { Identifier = c.Identifier })).WithMessage("Motorcycle rental is already available");
+            RuleFor(d => d).Must(c => rentalRepository.HasRentalMotto(c.Identifier)).WithMessage("Motorcycle rental is already available");
         }
     }
 }

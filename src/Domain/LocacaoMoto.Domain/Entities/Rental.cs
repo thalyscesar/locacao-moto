@@ -4,13 +4,34 @@ namespace LocacaoMoto.Domain.Entities
 {
     public class Rental
     {
-        public DateTime DateCreated { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public DateTime ExpectedEndDate { get; set; }
-        public Motto Motto { get; set; }
-        public DeliveryMan DeliveryMan { get; set; }
-        public int Plan { get; set; }
+        public Rental()
+        {
+
+        }
+
+        public Rental(int id, DateTime dateCreated, DateTime startDate, DateTime? endDate, DateTime expectedEndDate, string identifierMotto, string identifierDeliveryMan, int plan)
+        {
+            DateCreated = dateCreated;
+            StartDate = startDate;
+            ExpectedEndDate = expectedEndDate;
+            IdentifierMotto = identifierMotto;
+            IdentifierDeliveryMan = identifierDeliveryMan;
+            Plan = plan;
+        }
+
+        public int Id { get; private  set; }
+        public DateTime DateCreated { get; private set; }
+        public DateTime StartDate { get; private set; }
+        public DateTime? EndDate { get; private set; }
+        public DateTime ExpectedEndDate { get; private set; }
+        public string IdentifierMotto { get; private set; }
+        public string IdentifierDeliveryMan { get; private set; }
+        public int Plan { get; private set; }
+
+        public void SetEndDate(DateTime? endDate)
+        {
+            this.EndDate = endDate;
+        }
 
         public decimal GetCostByPlan()
         {
@@ -42,9 +63,9 @@ namespace LocacaoMoto.Domain.Entities
 
         public decimal CalculateDailyValue()
         {
-            if (ExpectedEndDate < EndDate)
+            if (EndDate < ExpectedEndDate) 
             {
-                var days = (EndDate - ExpectedEndDate).Days;
+                var days = (ExpectedEndDate - EndDate).Value.Days;
 
                 if (Plan == 7)
                 {
@@ -55,11 +76,11 @@ namespace LocacaoMoto.Domain.Entities
                     return (days * GetCostByPlan()) * 0.04M;
                 }
             }
-            else if (ExpectedEndDate > EndDate)
+            else if (EndDate > ExpectedEndDate)
             {
                 var amountPlan = GetCostByPlan() * Plan;
                 var additionalValue = 50;
-                var days = (ExpectedEndDate - EndDate).Days;
+                var days = (ExpectedEndDate - EndDate).Value.Days;
                 return amountPlan + (days * GetCostByPlan()) + (additionalValue * days);
             }
 

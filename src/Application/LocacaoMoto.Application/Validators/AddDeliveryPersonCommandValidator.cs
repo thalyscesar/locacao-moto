@@ -1,18 +1,18 @@
 ﻿using FluentValidation;
 using LocacaoMoto.Application.Commands;
-using FluentValidation;
+using LocacaoMoto.Application.Interfaces.Services;
+using LocacaoMoto.Domain.Constants;
+using LocacaoMoto.Domain.Interfaces.Repositories;
 
 namespace LocacaoMoto.Application.Validators
 {
-    public class AddDeliveryManCommandValidator : AbstractValidator<AddDeliveryManCommand>
+    public class AddDeliveryManCommandValidator : ValidatorBase<AddDeliveryManCommand>
     {
-        public AddDeliveryManCommandValidator()
+        public AddDeliveryManCommandValidator(IDeliveryManRepository deliveryManRepository, INotifier notifier):base(notifier)
         {
-
+            RuleFor(d => d.CNHType).Must(cnhType => cnhType == Constansts.CNH_TYPE_A || cnhType == Constansts.CNH_TYPE_B || cnhType == Constansts.CNH_TYPE_AB).WithMessage("CNH type invalid!");
+            RuleFor(d => d.CNPJ).Must(cnpj => !deliveryManRepository.HasCnpjNumber(new Queries.HasCNPJQuery() { CNPJNumber = cnpj })).WithMessage("CNPj already exists registered");
+            RuleFor(d => d.CNHNumber).Must(licenseNumber => !deliveryManRepository.HasCNHNumber(new Queries.HasCNHNumberQuery() { CNHNumber = licenseNumber })).WithMessage("License number already exists registered");
         }
-
-//        Os tipos de cnh válidos são A, B ou ambas A+B.
-//O cnpj é único e não pode se repetir.
-//O número da CNH é único e não pode se repetir.
     }
 }

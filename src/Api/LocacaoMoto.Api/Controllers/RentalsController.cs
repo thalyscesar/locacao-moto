@@ -1,6 +1,9 @@
-﻿using LocacaoMoto.Application.Commands;
+﻿using LocacaoMoto.Api.Models;
+using LocacaoMoto.Application.Commands;
 using LocacaoMoto.Application.Interfaces.Services;
+using LocacaoMoto.Application.Queries;
 using LocacaoMoto.Application.Responses;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocacaoMoto.Api.Controllers
@@ -11,63 +14,47 @@ namespace LocacaoMoto.Api.Controllers
     public class RentalController : ControllerBase
     {
         private readonly INotifier _notifier;
+        private readonly IMediator _mediator;
 
-        public RentalController(INotifier notifier)
+        public RentalController(INotifier notifier, IMediator mediator)
         {
             _notifier = notifier;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        public ActionResult<RentalResponse> CreateRental([FromBody] AddRentalCommand newRental)
+        public async Task<ActionResult> CreateRental([FromBody] AddRentalCommand newRental)
         {
+           var response = await _mediator.Send(newRental);
+
             if (_notifier.HasMessages())
                 return BadRequest(new { mensagem = _notifier.GetMessages() });
 
-            //if (newRental == null)
-            //    return BadRequest("Invalid rental data.");
-
-            //// Adiciona ID automaticamente
-            //newRental.Id = rentals.Count > 0 ? rentals.Max(r => r.Id) + 1 : 1;
-            //newRental.IsReturned = false;
-
-            //rentals.Add(newRental);
-            //return CreatedAtAction(nameof(GetRentalById), new { id = newRental.Id }, newRental);
-
-            return Ok(null);
+            return CreatedAtAction(nameof(AddRentalCommand), new { response.Id });
         }
 
         [HttpGet("{id}")]
-        public ActionResult<RentalResponse> GetRentalById(int id)
+        public async Task<ActionResult> GetRentalById(int id)
         {
+            var response = await _mediator.Send(new GetRentalByIdQuery { Id = id });
+
             if (_notifier.HasMessages())
                 return BadRequest(new { mensagem = _notifier.GetMessages() });
 
-            //var rental = rentals.FirstOrDefault(r => r.Id == id);
-            //if (rental == null)
-            //    return NotFound($"Rental with ID {id} not found.");
-            //return Ok(rental);
+            if (response == null) return NotFound($"Rental with ID {id} not found.");
 
-            return Ok(null);
+            return Ok(response);
         }
 
-        [HttpPut("{id}/devolution")]
-        public ActionResult ReturnRental(int id)
+        [HttpPut("{id}/return")]
+        public async Task<ActionResult> ReturnRental([FromBody] RentalReturnModel returnModel, int id )
         {
+            var dailyRates = await _mediator.Send(new CalculateMottoRentalValueCommand() { EndDate = returnModel.ReturnDate, Id = id });
+
             if (_notifier.HasMessages())
                 return BadRequest(new { mensagem = _notifier.GetMessages() });
 
-            //var rental = rentals.FirstOrDefault(r => r.Id == id);
-            //if (rental == null)
-            //    return NotFound($"Rental with ID {id} not found.");
-
-            //if (rental.IsReturned)
-            //    return BadRequest("Rental has already been returned.");
-
-            //rental.IsReturned = true;
-            //rental.ReturnDate = System.DateTime.Now;
-
-            //return Ok($"Rental ID {id} has been successfully returned.");
-            return Ok(null);
+            return Ok(dailyRates);
         }
     }
 }

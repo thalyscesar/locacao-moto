@@ -15,28 +15,38 @@ namespace LocacaoMoto.Infrastructure.Repositories
             _connection = connection;
         }
 
-        public bool HasRentalMotto(GetRentalByMottoIdentifierQuery query)
+        public bool HasRentalMotto(string identifier)
         {
             var sql = "select count(*) from public.rental where rental.motto_id = @Identifier";
 
-           return _connection.ExecuteScalar<int>(sql, query) > 0;
+            return _connection.ExecuteScalar<int>(sql, sql) > 0;
         }
 
-        public Task AddRental(Rental rental)
+        public async Task<int> AddRental(Rental rental)
         {
-            throw new NotImplementedException();
+            string insert = @"INSERT INTO public.rental(date_created, start_date, end_date, expected_end_date, motto_id, deliveryman_id, plan) 
+                              VALUES (@DateCreated, @StartDate, @EndDate, @ExpectedEndDate, @IdentifierMotto, @IdentifierDeliveryMan, @Plan)
+                                RETURNING id";
+
+            var id = await _connection.ExecuteScalarAsync<int>(insert, rental);
+
+            return id;
         }
 
-        public Task<RentalResponse> GetRentalById(GetRentalByIdQuery getRentalByIdQuery)
+        public async Task<Rental> GetRentalById(int id)
         {
-            throw new NotImplementedException();
-            //string querySelect = String.Format("select id, nome from cadastro.banco where unaccent(UPPER(TRIM(nome))) like '{0}%'", this.RemoverAcentos(inicial.ToUpper()));
-            //return DBHelper<Banco>.InstanciaNpgsql.GetQuery(querySelect).Select(b => new BuscarBancoQuery() { Id = b.Id, Nome = b.Nome }).ToList();
+            string select = @"SELECT id as Id, date_created as DateCreated , start_date as StartDate, end_date as EndDate, expected_end_date as ExpectedEndDate, motto_id as IdentifierMotto, deliveryman_id as IdentifierDeliveryMan, plan as Plan
+                              FROM public.rental where id = @Id";
+
+            return await _connection.QueryFirstOrDefaultAsync<Rental>(select, new { Id = id });
         }
 
-        public Task<RentalResponse> UpdateReturndDate(GetRentalByIdQuery getRentalByIdQuery)
+        public async Task UpdateReturndDate(Rental rental)
         {
-            throw new NotImplementedException();
+            string update = "UPDATE public.rental SET end_date= @EndDate WHERE id= @Id";
+
+            await _connection.ExecuteAsync(update, rental);
+            return;
         }
     }
 }

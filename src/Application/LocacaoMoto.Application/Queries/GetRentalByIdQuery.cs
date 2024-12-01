@@ -3,8 +3,8 @@ using MediatR;
 
 namespace LocacaoMoto.Application.Queries
 {
-    public class GetRentalByIdQuery: IRequest<RentalResponse>
+    public class GetRentalByIdQuery : IRequest<RentalResponse>
     {
-        public string Identifier { get; set; } = string.Empty;
+        public int Id { get; set; }
     }
 }

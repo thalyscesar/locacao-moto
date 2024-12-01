@@ -6,9 +6,9 @@ namespace LocacaoMoto.Domain.Interfaces.Repositories
 {
     public interface IRentalRepository
     {
-        Task AddRental(Rental rental);
-        Task<RentalResponse> GetRentalById(GetRentalByIdQuery getRentalByIdQuery);
-        bool HasRentalMotto(GetRentalByMottoIdentifierQuery query);
-        Task<RentalResponse> UpdateReturndDate(GetRentalByIdQuery getRentalByIdQuery);
+        Task<int> AddRental(Rental rental);
+        Task<Rental> GetRentalById(int id);
+        bool HasRentalMotto(string identifier);
+        Task UpdateReturndDate(Rental rental);
     }
 }

@@ -55,7 +55,7 @@ namespace LocacaoMoto.Application.Handlers.Commands
         public async Task<decimal> Handle(CalculateMottoRentalValueCommand request, CancellationToken cancellationToken)
         {
             var rental = await _rentalRepository.GetRentalById(request.Id);
-            rental.SetEndDate(request.EndDate);
+            rental.SetExpectedEndDate(request.EndDate);
 
            var dailyRates = rental.CalculateDailyValue();
 

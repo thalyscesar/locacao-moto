@@ -17,6 +17,7 @@ namespace LocacaoMoto.Domain.Entities
             IdentifierMotto = identifierMotto;
             IdentifierDeliveryMan = identifierDeliveryMan;
             Plan = plan;
+            EndDate = endDate;
         }
 
         public int Id { get; private  set; }
@@ -28,9 +29,9 @@ namespace LocacaoMoto.Domain.Entities
         public string IdentifierDeliveryMan { get; private set; }
         public int Plan { get; private set; }
 
-        public void SetEndDate(DateTime? endDate)
+        public void SetExpectedEndDate(DateTime ExpectedEndDate)
         {
-            this.EndDate = endDate;
+            this.ExpectedEndDate = ExpectedEndDate;
         }
 
         public decimal GetCostByPlan()
@@ -63,20 +64,23 @@ namespace LocacaoMoto.Domain.Entities
 
         public decimal CalculateDailyValue()
         {
-            if (EndDate < ExpectedEndDate) 
+            if (ExpectedEndDate < EndDate) 
             {
-                var days = (ExpectedEndDate - EndDate).Value.Days;
+                var days =(EndDate - ExpectedEndDate).Value.Days;
+                var dailyEffective = (ExpectedEndDate - StartDate).Days;
 
                 if (Plan == 7)
                 {
-                    return (days * GetCostByPlan()) * 0.02M;
+                    var fine = (days * GetCostByPlan()) * 0.2M;
+                    return (dailyEffective * GetCostByPlan()) + fine;
                 }
                 else if (Plan == 15)
                 {
-                    return (days * GetCostByPlan()) * 0.04M;
+                    var fine = (days * GetCostByPlan()) * 0.4M;
+                    return (dailyEffective * GetCostByPlan()) + fine;
                 }
             }
-            else if (EndDate > ExpectedEndDate)
+            else if (ExpectedEndDate > EndDate)
             {
                 var amountPlan = GetCostByPlan() * Plan;
                 var additionalValue = 50;

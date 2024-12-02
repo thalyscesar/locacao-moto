@@ -43,7 +43,7 @@ namespace LocacaoMoto.Infrastructure.Repositories
 
         public async Task UpdateReturndDate(Rental rental)
         {
-            string update = "UPDATE public.rental SET end_date= @EndDate WHERE id= @Id";
+            string update = "UPDATE public.rental SET expected_end_date= @ExpectedEndDate WHERE id= @Id";
 
             await _connection.ExecuteAsync(update, rental);
             return;

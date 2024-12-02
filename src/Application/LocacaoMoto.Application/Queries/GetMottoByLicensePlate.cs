@@ -1,14 +1,15 @@
-﻿namespace LocacaoMoto.Application.Queries
+﻿using LocacaoMoto.Application.Responses;
+using MediatR;
+
+namespace LocacaoMoto.Application.Queries
 {
-    public class GetMottoByLicensePlateQuery
+    public class GetMottoByLicensePlateQuery: IRequest<MottoResponse>
     {
-        public GetMottoByLicensePlateQuery(string identifier, string licensePlate)
+        public GetMottoByLicensePlateQuery(string licensePlate)
         {
-            Identifier = identifier;
             LicensePlate = licensePlate;
         }
 
-        public string Identifier { get; set; }
         public string LicensePlate { get; set; }
     }
 }

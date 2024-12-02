@@ -21,6 +21,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 .vs/
+/cnh
 
 # Roslyn cache directories
 *.ide/

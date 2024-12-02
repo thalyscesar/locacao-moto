@@ -17,7 +17,7 @@ namespace LocacaoMoto.Infrastructure.Repositories
         {
             var sql = "select count(*) from public.rental where rental.motto_id = @Identifier";
 
-            return _connection.ExecuteScalar<int>(sql, sql) > 0;
+            return _connection.ExecuteScalar<int>(sql, new { identifier }) > 0;
         }
 
         public async Task<int> AddRental(Rental rental)

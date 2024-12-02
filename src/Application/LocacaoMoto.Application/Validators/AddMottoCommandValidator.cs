@@ -14,7 +14,7 @@ namespace LocacaoMoto.Application.Validators
             RuleFor(m => m.Year).GreaterThan(0);
             RuleFor(m => m.Model).NotEmpty().NotNull();
             RuleFor(m => m.LicensePlate).NotEmpty().NotNull();
-            RuleFor(m => m).Must(m => !mottoRepository.AnyLicencePlateAsync(new GetMottoByLicensePlateQuery(m.Identifier, m.LicensePlate))).WithMessage("motorcycle plate must be unique");
+            RuleFor(m => m).Must(m => !mottoRepository.AnyLicencePlateAsync(m.LicensePlate)).WithMessage("motorcycle plate must be unique");
         }
     }
 }

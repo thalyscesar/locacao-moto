@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using LocacaoMoto.Application.Queries;
 using LocacaoMoto.Domain.Entities;
 using LocacaoMoto.Domain.Interfaces.Repositories;
 using System.Data;
@@ -24,11 +23,11 @@ namespace LocacaoMoto.Infrastructure.Repositories
             return;
         }
 
-        public bool AnyLicencePlateAsync(GetMottoByLicensePlateQuery motto)
+        public bool AnyLicencePlateAsync(string licensePlate)
         {
             string sql = "SELECT Count(*) FROM public.motto where license_plate = @LicensePlate";
 
-            return _connection.ExecuteScalar<int>(sql, motto) > 0;
+            return _connection.ExecuteScalar<int>(sql, new { LicensePlate = licensePlate }) > 0;
         }
 
         public async Task DeleteMottoById(Motto motto)
@@ -47,11 +46,18 @@ namespace LocacaoMoto.Infrastructure.Repositories
             return await _connection.QueryAsync<Motto>(sql);
         }
 
-        public async Task<Motto> GetMottoById(GetMottoByIdQuery getMottoByIdQuery)
+        public async Task<Motto> GetMottoById(string identifier)
         {
             string sql = "SELECT identifier as Identifier, model as Model, license_plate as LicensePlate, year as Year FROM public.motto WHERE identifier = @Identifier";
 
-            return _connection.QueryFirstOrDefault<Motto>(sql, getMottoByIdQuery);
+            return _connection.QueryFirstOrDefault<Motto>(sql, new { Identifier = identifier });
+        }
+
+        public Task<Motto> GetMottoByLicensePlate(string licensePlate)
+        {
+            string sql = "SELECT identifier as Identifier, model as Model, license_plate as LicensePlate, year as Year FROM public.motto WHERE license_plate = @LicensePlate";
+
+            return _connection.QueryFirstOrDefaultAsync<Motto>(sql, new { LicensePlate = licensePlate });
         }
 
         public Task ModifyLicencePlateMotto(Motto motto)

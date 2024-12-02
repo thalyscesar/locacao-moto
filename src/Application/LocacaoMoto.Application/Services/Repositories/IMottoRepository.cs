@@ -1,5 +1,4 @@
-﻿using LocacaoMoto.Application.Queries;
-using LocacaoMoto.Domain.Entities;
+﻿using LocacaoMoto.Domain.Entities;
 
 namespace LocacaoMoto.Domain.Interfaces.Repositories
 {
@@ -8,8 +7,9 @@ namespace LocacaoMoto.Domain.Interfaces.Repositories
         Task AddMotto(Motto motto);
         Task<IEnumerable<Motto>> GetAllMottos();
         Task ModifyLicencePlateMotto(Motto motto);
-        Task<Motto> GetMottoById(GetMottoByIdQuery getMottoByIdQuery);
+        Task<Motto> GetMottoById(string identifier);
         Task DeleteMottoById(Motto motto);
-        bool AnyLicencePlateAsync(GetMottoByLicensePlateQuery motto);
+        bool AnyLicencePlateAsync(string licensePlate);
+        Task<Motto> GetMottoByLicensePlate(string licensePlate);
     }
 }

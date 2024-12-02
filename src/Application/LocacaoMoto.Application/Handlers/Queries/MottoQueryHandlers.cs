@@ -6,7 +6,9 @@ using MediatR;
 namespace LocacaoMoto.Application.Handlers.Queries
 {
     public class MottoQueryHandlers : IRequestHandler<GetAllQuery, IEnumerable<MottoResponse>>,
-                                      IRequestHandler<GetMottoByIdQuery, MottoResponse>
+                                      IRequestHandler<GetMottoByIdQuery, MottoResponse>,
+                                      IRequestHandler<GetMottoByLicensePlateQuery, MottoResponse>
+
     {
         private readonly IMottoRepository mottoRepository;
 
@@ -33,7 +35,22 @@ namespace LocacaoMoto.Application.Handlers.Queries
 
         public async Task<MottoResponse> Handle(GetMottoByIdQuery request, CancellationToken cancellationToken)
         {
-            var motto = await mottoRepository.GetMottoById(request);
+            var motto = await mottoRepository.GetMottoById(request.Identifier);
+
+            if (motto == null) return null;
+
+            return new MottoResponse()
+            {
+                Year = motto.Year,
+                Identifier = motto.Identifier,
+                LicensePlate = motto.LicensePlate,
+                Model = motto.Model
+            };
+        }
+
+        public async Task<MottoResponse> Handle(GetMottoByLicensePlateQuery request, CancellationToken cancellationToken)
+        {
+            var motto = await mottoRepository.GetMottoByLicensePlate(request.LicensePlate);
 
             if (motto == null) return null;
 

@@ -2,8 +2,6 @@
 {
     public class DeliveryMan
     {
-        private string deliveryManId;
-
         public string Identifier { get; set; }
         public string Name { get; set; }
         public string CNPJ { get; set; }
@@ -14,19 +12,15 @@
         
         public DeliveryMan() { }
 
-        public DeliveryMan(string identifier, string name, string cnpj, DateTime dateOfBirth, string cnhNumber, string cnhType, string? cnhImage): this(identifier)
+        public DeliveryMan(string identifier, string name, string cnpj, DateTime dateOfBirth, string cnhNumber, string cnhType, string? cnhImage)
         {
+            Identifier = identifier;
             Name = name;
             CNPJ = cnpj;
             DateOfBirth = dateOfBirth;
             CNHNumber = cnhNumber;
             CNHType = cnhType;
             CNHImage = cnhImage;
-        }
-
-        public DeliveryMan(string deliveryManId)
-        {
-            this.deliveryManId = deliveryManId;
         }
 
         public void SetIdentifier(string identifier)

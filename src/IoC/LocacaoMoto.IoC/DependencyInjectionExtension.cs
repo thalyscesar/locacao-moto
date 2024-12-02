@@ -21,7 +21,7 @@ namespace LocacaoMoto.IoC
     {
         public static void AddBuildServices(this IServiceCollection services)
         {
-            services.AddSingleton<INotifier, Notifier>();
+            services.AddScoped<INotifier, Notifier>();
         }
 
         public static void AddMediatRApi(this IServiceCollection services)

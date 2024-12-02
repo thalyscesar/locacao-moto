@@ -38,7 +38,7 @@ namespace LocacaoMoto.Application.Handlers.Commands
 
             await _mottoRepository.ModifyLicencePlateMotto(motto);
 
-            return "Placa modificada com sucesso";
+            return "License plate updated with sucessfuly";
         }
 
         public async Task<MottoResponse> Handle(AddMottoCommand request, CancellationToken cancellationToken)

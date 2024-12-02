@@ -45,6 +45,17 @@ namespace LocacaoMoto.Api.Controllers
             return Ok(response);
         }
 
+        [HttpGet("{licensePlate}/plate")]
+        public async Task<ActionResult> GetByLicensePlate(string licensePlate)
+        {
+            var response = await _mediator.Send(new GetMottoByLicensePlateQuery(licensePlate));
+
+            if (response == null)
+                return NotFound();
+
+            return Ok(response);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] AddMottoCommand newMotto)
@@ -74,6 +85,9 @@ namespace LocacaoMoto.Api.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             await _mediator.Send(new DeleteMottoCommand(id));
+
+            if (_notifier.HasMessages())
+                return BadRequest(new { mensagem = _notifier.GetMessages() });
 
             return Ok();
         }

@@ -2,7 +2,6 @@
 using LocacaoMoto.Application.Commands;
 using LocacaoMoto.Application.Interfaces.Services;
 using LocacaoMoto.Application.Queries;
-using LocacaoMoto.Application.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

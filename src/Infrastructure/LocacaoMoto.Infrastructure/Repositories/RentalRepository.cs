@@ -1,8 +1,6 @@
-﻿using LocacaoMoto.Application.Queries;
-using LocacaoMoto.Application.Responses;
+﻿using Dapper;
 using LocacaoMoto.Domain.Entities;
 using LocacaoMoto.Domain.Interfaces.Repositories;
-using Dapper;
 using System.Data;
 
 namespace LocacaoMoto.Infrastructure.Repositories

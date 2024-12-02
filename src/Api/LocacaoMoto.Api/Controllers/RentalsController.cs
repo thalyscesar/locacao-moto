@@ -49,7 +49,7 @@ namespace LocacaoMoto.Api.Controllers
         [HttpPut("{id}/return")]
         public async Task<ActionResult> ReturnRental([FromBody] RentalReturnModel returnModel, int id )
         {
-            var dailyRates = await _mediator.Send(new CalculateMottoRentalValueCommand() { EndDate = returnModel.ReturnDate, Id = id });
+            var dailyRates = await _mediator.Send(new CalculateMottoRentalValueCommand() { ReturnDate = returnModel.ReturnDate, Id = id });
 
             if (_notifier.HasMessages())
                 return BadRequest(new { mensagem = _notifier.GetMessages() });
